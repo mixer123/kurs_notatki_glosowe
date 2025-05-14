@@ -9,7 +9,8 @@ from qdrant_client.models import PointStruct, Distance, VectorParams
 from pathlib import Path
 
 
-p=Path('../../dot_env')
+from pathlib import Path
+p=Path('../dot_env')
 env = dotenv_values(p / ".env")
 
 EMBEDDING_MODEL = "text-embedding-3-large"
@@ -21,7 +22,7 @@ AUDIO_TRANSCRIBE_MODEL = "whisper-1"
 QDRANT_COLLECTION_NAME = "notes"
 
 def get_openai_client():
-    return OpenAI(api_key=st.session_state["OPEN_AI_KEY"])
+    return OpenAI(api_key=st.session_state["openai_api_key"])
 
 def transcribe_audio(audio_bytes):
     openai_client = get_openai_client()
@@ -40,11 +41,7 @@ def transcribe_audio(audio_bytes):
 #
 @st.cache_resource
 def get_qdrant_client():
-    return QdrantClient(
-    url=env['url'],
-    api_key=env['api_key'],
-)
-
+    return QdrantClient(path=":memory:")
 
 def assure_db_collection_exists():
     qdrant_client = get_qdrant_client()
